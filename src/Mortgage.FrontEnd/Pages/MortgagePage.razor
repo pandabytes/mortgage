@@ -1,0 +1,97 @@
+@page "/mortgage"
+
+<RadzenStack Style="width: 40%; overflow: hidden;">
+  <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-p-12" style="text-align: left;">
+    <RadzenFormField Text="Date">
+      <RadzenTextBox @bind-Value="@_date" />
+    </RadzenFormField>
+    <RadzenFormField Text="Starting balance">
+      <RadzenNumeric ShowUpDown="false" TValue="float" @bind-Value="@_startBalance" />
+    </RadzenFormField>
+    <RadzenFormField Text="Loan Term">
+      <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value="@_loanTerm" />
+    </RadzenFormField>
+    <RadzenFormField Text="Interest Rate">
+      <RadzenNumeric ShowUpDown="false" TValue="float" @bind-Value="@_interestRate" />
+    </RadzenFormField>
+    <RadzenFormField Text="Monthly Mortgage Payment">
+      <RadzenNumeric ShowUpDown="false" TValue="float" @bind-Value="@_monthlyPayment" />
+    </RadzenFormField>
+
+    <RadzenCard Class="rz-shadow-0 rz-border-radius-0">
+      <RadzenButton Text="Submit" Click="@OnSubmit" />
+    </RadzenCard>
+  </RadzenCard>
+</RadzenStack>
+
+@if (_amortizationList.Count > 0)
+{
+  <RadzenText Style="margin-top: 10px; margin-bottom: 10px">
+    It will take @(_amortizationList.Count / 12) years to pay off the mortgage.
+  </RadzenText>
+}
+
+<RadzenStack Orientation="Orientation.Vertical"
+             Style="width: 100%; max-width: 2300; overflow: hidden;"
+             Class="rz-mx-auto rz-shadow-0">
+
+  <RadzenDataGrid Data="@_amortizationList"
+                  Count="@_amortizationList.Count"
+                  TItem="Amortization" 
+                  IsLoading="@_isLoading"
+                  PageSize="@InitialPageSize"
+                  PageSizeOptions="@PageSizeOptions"
+                  PagerPosition="PagerPosition.Bottom"
+                  FilterPopupRenderMode="PopupRenderMode.OnDemand" 
+                  FilterMode="FilterMode.Advanced"
+                  ColumnWidth="80px"
+                  SelectionMode="DataGridSelectionMode.Single"
+                  AllowColumnResize="true"
+                  AllowPaging="true"
+                  style="height: 650px"
+                  @bind-Value=@_selectedAmortization>
+    <Columns>
+      <RadzenDataGridColumn TItem="Amortization" Property="Date" Title="Date" />
+      <RadzenDataGridColumn TItem="Amortization" Property="StartBalance" Title="Start Balance">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.StartBalance))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="LoanTerm" Title="Loan Term" />
+      <RadzenDataGridColumn TItem="Amortization" Property="Interest" Title="Interest %">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToPercentageFormat(amortization.Interest))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="MonthlyPayment" Title="Monthly Payment">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.MonthlyPayment))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="PrincipalPortion" Title="Principal">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.PrincipalPortion))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="InterestPortion" Title="Interest">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.InterestPortion))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="RemainingBalance" Title="Remaining Balance">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.RemainingBalance))" />
+        </Template>
+      </RadzenDataGridColumn>
+      <RadzenDataGridColumn TItem="Amortization" Property="TotalInterest" Title="Total Interest">
+        <Template Context="amortization">
+          <RadzenLabel Text="@(ConvertToCurrencyFormat(amortization.TotalInterest))" />
+        </Template>
+      </RadzenDataGridColumn>
+    </Columns>
+  </RadzenDataGrid>
+</RadzenStack>
+
+<RadzenCard Class="rz-shadow-0 rz-border-radius-0">
+  <RadzenButton Text="Clear" Click="@OnClear" />
+</RadzenCard>
