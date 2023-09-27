@@ -95,10 +95,7 @@ public partial class MortgagePage : ComponentBase
     _amortizationList = amortizationList;
   }
 
-  private void OnClear()
-  {
-    _amortizationList.Clear();
-  }
+  private void OnClear() => _amortizationList.Clear();
 
   private static float CalculateInterestPortions(float startBalance, float interest, float mortgagePayment)
     => mortgagePayment - (mortgagePayment - (interest / 12 * startBalance));
