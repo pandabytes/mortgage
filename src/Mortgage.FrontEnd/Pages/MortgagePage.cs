@@ -39,7 +39,10 @@ public partial class MortgagePage : ComponentBase
 
   private void OnSubmit()
   {
+    // Reset these
+    _isLoading = true;
     _amortizationList.Clear();
+
     var dateTime = DateTime.ParseExact(_date, "MM/yyyy", CultureInfo.InvariantCulture);
     var dateOnly = DateOnly.FromDateTime(dateTime);
 
@@ -93,6 +96,7 @@ public partial class MortgagePage : ComponentBase
     }
 
     _amortizationList = amortizationList;
+    _isLoading = false;
   }
 
   private void OnClear() => _amortizationList.Clear();
